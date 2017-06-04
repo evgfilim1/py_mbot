@@ -1,0 +1,13 @@
+{
+  "en": {
+    "start": "Hello, I'm modular bot, written on Python 3.6\nIf you want to learn more, press /help",
+    "help": "/modules - available modules\n/help [module] - get module help\n/about - about me",
+    "about": "py_mbot v.{0}",
+    "modules": "Available modules:\n<pre>{0}</pre>\nUnavailable modules:\n<pre>{1}</pre>"
+  },
+  "ru": {
+    "start": "Привет. Я - модульный бот, написанный на Python 3.6\nХочешь узнать больше - нажми /help",
+    "help": "/modules - доступные модули\n/help [модуль] - помощь по модулю\n/about - обо мне",
+    "modules": "Доступные модули:\n<pre>{0}</pre>\nНедоступные модули:\n<pre>{1}</pre>"
+  }
+}
