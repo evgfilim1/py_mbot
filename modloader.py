@@ -9,7 +9,7 @@ def load_modules(updater):
     api = TelegramAPI(updater)
 
     for module_name in listdir('./modules'):
-        if module_name.endswith('.py'):
+        if module_name.endswith('.py') and not module_name.startswith('lib-'):
             module_name = module_name[:-3]
         try:
             current_module = getattr(__import__(f'modules.{module_name}'), module_name)
