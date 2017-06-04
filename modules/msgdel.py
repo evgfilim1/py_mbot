@@ -14,5 +14,5 @@ class TelegramModule(BaseTelegramModule):
                                              "and type /delete")
 
     def delete(self, message, args):
-        if message.from_user.id == self._telegram_api.bot_id:
+        if message.reply_to_message.from_user.id == self._telegram_api.bot_id:
             self._telegram_api.delete_message(message=message.reply_to_message)
