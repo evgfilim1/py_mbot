@@ -5,7 +5,7 @@ class TelegramModule(BaseTelegramModule):
     def __init__(self, telegram_api):
         super(TelegramModule, self).__init__(telegram_api)
         self._telegram_api.register_command(['kick'], self.kick)
-        self._telegram_api.register_command(['ban'], self.ban)
+        # self._telegram_api.register_command(['ban'], self.ban)
         self.friendly_name = 'AdminModule'
 
     def help(self, message, args):
