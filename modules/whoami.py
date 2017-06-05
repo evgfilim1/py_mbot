@@ -13,5 +13,7 @@ class TelegramModule(BaseTelegramModule):
                                              "Aliases: /who, /whois")
 
     def who(self, message, args):
-        self._telegram_api.send_text_message(message.chat_id, f"You are {message.from_user.name}\n"
-                                                              f"Your ID: {message.from_user.id}\n")
+        self._telegram_api.send_text_message(message.chat_id,
+                                             "You are {0}\nYour ID: {1}\n".format(
+                                                 message.from_user.name, message.from_user.id
+                                             ))
