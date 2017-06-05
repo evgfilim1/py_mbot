@@ -1,7 +1,8 @@
 from os import listdir
 from api import TelegramAPI
 
-SUCCESS = {}
+ENABLED = {}
+DISABLED = []
 FAILURE = {}
 
 
@@ -21,7 +22,11 @@ def load_modules(updater):
         if loaded_module.friendly_name:
             module_name = loaded_module.friendly_name
 
-        if module_name not in SUCCESS:
-            SUCCESS.update({module_name: loaded_module})
-        else:
+        if module_name in ENABLED or module_name in DISABLED:
             FAILURE.update({module_name: 'Module {0} is already loaded!'.format(module_name)})
+
+        if loaded_module.disabled:
+            DISABLED.append(module_name)
+            continue
+
+        ENABLED.update({module_name: loaded_module})
