@@ -32,6 +32,9 @@ class TelegramAPI(object):
             callback(function): callable object to execute
             allow_edited(Optional[bool]): pass edited messages
 
+        Raises:
+            ValueError: if one of commands in ``commands`` was already registered 
+
         """
         for command in commands:
             self._register_command(command)
