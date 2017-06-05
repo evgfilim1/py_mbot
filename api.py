@@ -1,5 +1,5 @@
 from bases import JSONAPI
-from telegram import ParseMode
+from telegram import ParseMode, TelegramError
 from telegram.ext import CommandHandler
 
 
@@ -56,7 +56,7 @@ class TelegramAPI(object):
             reply_to(Optional[int]): ID of message to reply to
 
         Returns:
-            bool: ``True`` if message was sent
+            bool: ``True`` if message was sent, ``False`` otherwise
 
         Raises:
             ValueError: if ``markdown`` and ``html`` are both ``True``
@@ -72,19 +72,23 @@ class TelegramAPI(object):
         else:
             parse_mode = None
 
-        self._bot.send_message(chat, text, parse_mode=parse_mode, reply_to_message_id=reply_to,
-                               **kwargs)
+        try:
+            self._bot.send_message(chat, text, parse_mode=parse_mode, reply_to_message_id=reply_to,
+                                   **kwargs)
+        except TelegramError:
+            return False
+        return True
 
     def delete_message(self, chat=None, message_id=None, message=None):
         """Deletes message
 
         Args:
-            chat(Optional[str|int]): chat ID or '@channel_name'
+            chat(Optional[int|str]): chat ID or '@channel_name'
             message_id(Optional[int]): ID of message to be deleted
             message(Optional[:class:`telegram.Message`]): message to be deleted
 
         Returns:
-            bool: True if success
+            bool: ``True`` on success, ``False`` otherwise
 
         Raises:
             ValueError: if ``chat``, ``message_id`` and ``message`` are ``None``
@@ -96,29 +100,92 @@ class TelegramAPI(object):
             chat = message.chat_id
             message_id = message.message_id
 
-        self._bot.delete_message(chat, message_id)
+        try:
+            return self._bot.delete_message(chat, message_id)
+        except TelegramError:
+            return False
 
     def ban_member(self, chat, user_id=None, user=None):
-        if user_id is None and user is None:
+        """Bans chat member
+
+        Args:
+            chat(int|str): chat ID or '@channel_name'
+            user_id(Optional[int]): user ID to be banned
+            user(Optional[:class:`telegram.User`]): user to be banned
+
+        Returns:
+            bool: ``True`` on success, ``False`` otherwise
+
+        Raises:
+            ValueError: if both ``user_id`` and ``user`` were (not) given
+
+        """
+        if (user_id is None and user is None) or (user_id is not None and user is not None):
             raise ValueError('Either `user_id` or `user` must be given')
         if user is not None:
             user_id = user.id
 
-        self._bot.kick_chat_member(chat, user_id)
+        try:
+            self._bot.kick_chat_member(chat, user_id)
+        except TelegramError:
+            return False
+        return True
 
     def unban_member(self, chat, user_id=None, user=None):
+        """Unbans chat member
+
+        Args:
+            chat(int|str): chat ID or '@channel_name'
+            user_id(Optional[int]): user ID to be unbanned
+            user(Optional[:class:`telegram.User`]): user to be unbanned
+
+        Returns:
+            bool: ``True`` on success, ``False`` otherwise
+
+        Raises:
+            ValueError: if both ``user_id`` and ``user`` were (not) given
+
+        """
         if user_id is None and user is None:
             raise ValueError('Either `user_id` or `user` must be given')
         if user is not None:
             user_id = user.id
 
-        self._bot.unban_chat_member(chat, user_id)
+        try:
+            self._bot.unban_chat_member(chat, user_id)
+        except TelegramError:
+            return False
+        return True
 
     def kick_member(self, chat, user_id=None, user=None):
-        self.ban_member(chat, user_id, user)
-        self.unban_member(chat, user_id, user)
+        """Kicks chat member
+
+        Args:
+            chat(int|str): chat ID or '@channel_name'
+            user_id(Optional[int]): user ID to be unbanned
+            user(Optional[:class:`telegram.User`]): user to be unbanned
+
+        Returns:
+            bool: ``True`` on success, ``False`` otherwise
+
+        Raises:
+            ValueError: if both ``user_id`` and ``user`` were (not) given
+
+        """
+        return self.ban_member(chat, user_id, user) and self.unban_member(chat, user_id, user)
 
     def get_admins(self, chat, use_ids=False):
+        """Get chat administrators and return them
+
+        Args:
+            chat(int|str): chat ID or '@channel_name'
+            use_ids(Optional[bool]): if ``True``, returns list of IDs, otherwise returns list of
+                ``telegram.ChatMember``
+
+        Returns:
+            list: list of admins
+
+        """
         admins = self._bot.get_chat_administrators(chat)
         if use_ids:
             return [admin.user.id for admin in admins]
@@ -131,11 +198,31 @@ class TelegramAPI(object):
 
 
 class ConfigAPI(JSONAPI):
+    """This class gives easy access to config files used by module
+
+    Args:
+        name(str): module name
+
+    """
     def __init__(self, name):
         super(ConfigAPI, self).__init__('config', name)
 
 
 class LangAPI(JSONAPI):
+    """This class gives easy access to language files (translations)
+
+    Short usage:
+    >>> tr = LangAPI('foo')
+    >>> print(tr('en_US', 'bar'))
+
+    If desired string cannot be found in specified language, it will fallback to 'en'.
+    If desired string cannot be found in 'en', ``None`` is returned
+
+    Args:
+        name(str): module name
+
+    """
+    # TODO: use built-in python translation library
     def __init__(self, name):
         super(LangAPI, self).__init__('lang', name)
 

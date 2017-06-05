@@ -31,7 +31,19 @@ class BaseTelegramModule(object):
 
 
 class JSONAPI(object):
-    # TODO: Docs
+    """This class represents base for APIs that work with JSON files
+
+    Attributes:
+        raw_data: read-only raw data from file
+
+    Args:
+        directory(str): directory to use for finding a file
+        name(str): name of file without ``.json` extension
+
+    Raises:
+        FileNotFoundError: when specified file cannot be found
+
+    """
     def __init__(self, directory, name):
         with open('./{0}/{1}.json'.format(directory, name), 'r') as f:
             self._raw_data = json.load(f)
