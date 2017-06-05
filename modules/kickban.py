@@ -4,9 +4,10 @@ from bases import BaseTelegramModule
 class TelegramModule(BaseTelegramModule):
     def __init__(self, telegram_api):
         super(TelegramModule, self).__init__(telegram_api)
-        self._telegram_api.register_command(['kick'], self.kick)
+        self.commands = ((['kick'], self.kick), )
         # self._telegram_api.register_command(['ban'], self.ban)
         self.friendly_name = 'AdminModule'
+        self._register_module()
 
     def help(self, message, args):
         self._telegram_api.send_text_message(message.chat_id,
