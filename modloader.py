@@ -1,5 +1,5 @@
 from os import listdir
-from api import TelegramAPI
+import api
 
 ENABLED = {}
 DISABLED = []
@@ -7,14 +7,14 @@ FAILURE = {}
 
 
 def load_modules(updater):
-    api = TelegramAPI(updater)
+    telegram_api = api.TelegramAPI(updater)
 
     for module_name in listdir('./modules'):
         if not module_name.startswith('lib-') and module_name.endswith('.py'):
             module_name = module_name[:-3]
         try:
             current_module = getattr(__import__('modules.{0}'.format(module_name)), module_name)
-            loaded_module = current_module.TelegramModule(api)
+            loaded_module = current_module.TelegramModule(telegram_api)
         except Exception as e:
             FAILURE.update({module_name: e})
             continue
