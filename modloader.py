@@ -12,7 +12,7 @@ def load_modules(updater):
         if module_name.endswith('.py'):
             module_name = module_name[:-3]
         try:
-            current_module = getattr(__import__(f'modules.{module_name}'), module_name)
+            current_module = getattr(__import__('modules.{0}'.format(module_name)), module_name)
             loaded_module = current_module.TelegramModule(api)
         except Exception as e:
             FAILURE.update({module_name: e})
@@ -24,4 +24,4 @@ def load_modules(updater):
         if module_name not in SUCCESS:
             SUCCESS.update({module_name: loaded_module})
         else:
-            FAILURE.update({module_name: f'Module {module_name} is already loaded!'})
+            FAILURE.update({module_name: 'Module {0} is already loaded!'.format(module_name)})

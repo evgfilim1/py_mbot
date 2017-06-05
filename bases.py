@@ -31,7 +31,7 @@ class BaseTelegramModule(object):
 class JSONAPI(object):
     # TODO: Docs
     def __init__(self, directory, name):
-        with open(f'./{directory}/{name}.json', 'r') as f:
+        with open('./{0}/{1}.json'.format(directory, name), 'r') as f:
             self._raw_data = json.load(f)
 
     def __getitem__(self, item):
