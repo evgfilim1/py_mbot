@@ -1,6 +1,6 @@
 from bases import JSONAPI
 from telegram import ParseMode, TelegramError
-from telegram.ext import CommandHandler
+from telegram.ext import CommandHandler, MessageHandler, Filters
 
 
 class TelegramAPI(object):
@@ -33,7 +33,7 @@ class TelegramAPI(object):
             allow_edited(Optional[bool]): pass edited messages
 
         Raises:
-            ValueError: if one of commands in ``commands`` was already registered 
+            ValueError: if one of commands in ``commands`` was already registered
 
         """
         for command in commands:
@@ -44,6 +44,19 @@ class TelegramAPI(object):
                      update.effective_message.text.split(' ')[1:])
         self._dispatcher.add_handler(CommandHandler(commands, process_update,
                                                     allow_edited=allow_edited))
+
+    def register_text_handler(self, callback, allow_edited=False):
+        """Registers text message handler
+
+        Args:
+            callback(function): callable object to execute
+            allow_edited(Optional[bool]): pass edited messages
+
+        """
+        def process_update(bot, update):
+            callback(update.effective_message)
+        self._dispatcher.add_handler(MessageHandler(Filters.text, process_update,
+                                                    edited_updates=allow_edited))
 
     def send_text_message(self, chat, text, markdown=False, html=False, reply_to=None, **kwargs):
         """Sends message
