@@ -32,6 +32,7 @@ class TelegramModule(BaseTelegramModule):
         self.results_today = {}
         self.chat_users = self._load("chat.pkl")
         self.locks = []
+        self.TEXT_ALREADY = "Согласно сегодняшнему розыгрышу, *{s} дня* — `{n}`"
         self.TEXTS = [["Итак, кто же сегодня *{s} дня*?", "_Хмм, интересно..._", "*АГА!*",
          "Сегодня ты *{s} дня,* {n}"],
          ["*Колесо Сансары запущено!*", "_Что за дичь?!_", "Ну ок...",
