@@ -36,10 +36,10 @@ def about(bot, update):
 def module_list(bot, update):
     lang = update.effective_user.language_code
     modlist = ''
-    for module_name in modloader.SUCCESS:
+    for module_name in sorted(modloader.SUCCESS):
         modlist += ' - {0}\n'.format(module_name)
     fail_modlist = ''
-    for (module_name, e) in modloader.FAILURE.items():
+    for (module_name, e) in sorted(modloader.FAILURE.items()):
         fail_modlist += ' - {0}: {1}\n'.format(module_name, e)
     update.effective_message.reply_text(tr(lang, 'modules').format(modlist, fail_modlist),
                                         parse_mode="HTML")
