@@ -19,10 +19,26 @@ class TelegramModule(BaseTelegramModule):
         super(TelegramModule, self).__init__(api)
         self.friendly_name = "Multi Spin"
         self._telegram_api.register_command(['spin'], self.spin)
+        self._telegram_api.register_command(['spin_setname'], self.spin_setname)
         dp.add_handler(MessageHandler(Filters.all, self.update_cache, edited_updates=True), group=-1)
         self.spin_name = self._load("spins.pkl")
         self.results_today = {}
         
+
+    def spin_setname(self, message, args):
+        #pass
+        try:
+            spin_num = int(args.split()[0])
+        except Exception:
+            self._telegram_api.send_text_message(chat_id, "Usage `/spin_setname <num> <name>`", markdown=True)
+            return
+        try:
+            self.spin_name[chat_id][spin_num].update(args[len(args.split()[0])+1:])
+        except Exception:
+            self.spin_name[chat_id]={}
+            self.spin_name[chat_id][spin_num].update(args[len(args.split()[0])+1:])
+        self._telegram_api.send_text_message(chat_id, "*Done*", markdown=True)
+
 
     def spin(self, message, args):
         chat_id = message.chat_id
@@ -31,15 +47,19 @@ class TelegramModule(BaseTelegramModule):
         except Exception:
             self._telegram_api.send_text_message(chat_id, "Gimme int dumbass")
             return
-        s = escape_markdown(self.spin_name.get((chat_id,spin_num), self.DEFAULT_SPIN_NAME))
-        p = self.results_today.get((chat_id,spin_num))
+        s = escape_markdown(self.spin_name[chat_id].get(spin_num))
+        try:
+            p = self.results_today[chat_id].get(spin_num)
+        except Exception:
+            p = None
+            self.results_today[chat_id] = {}
         if chat_id in locks:
             return
         if p is not None:
             self._telegram_api.send_text_message(chat_id, self.TEXT_ALREADY.format(s=s, n=p),
                              markdown=True)
         else:
-            p = escape_markdown(self.choose_random_user(chat_id, bot))
+            p = escape_markdown(self.choose_random_user(chat_id))
             from time import sleep
             curr_text = choice(self.TEXTS)
             locks.append(chat_id)
