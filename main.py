@@ -12,8 +12,6 @@ tr = LangAPI('main')
 updater = Updater(config['token'])
 dp = updater.dispatcher
 
-modloader.load_modules(updater)
-
 
 def start(bot, update):
     lang = update.effective_user.language_code
@@ -55,11 +53,17 @@ def module_list(bot, update):
                                         parse_mode="HTML")
 
 
-dp.add_handler(CommandHandler('start', start))
-dp.add_handler(CommandHandler('help', help, pass_args=True))
-dp.add_handler(CommandHandler('about', about))
-dp.add_handler(CommandHandler('modules', module_list))
-dp.add_error_handler(lambda bot, update, error: print(error))
+def main():
+    modloader.load_modules(updater)
 
-updater.start_polling(clean=True)
-updater.idle()
+    dp.add_handler(CommandHandler('start', start))
+    dp.add_handler(CommandHandler('help', help, pass_args=True))
+    dp.add_handler(CommandHandler('about', about))
+    dp.add_handler(CommandHandler('modules', module_list))
+    dp.add_error_handler(lambda bot, update, error: print(error))
+
+    updater.start_polling(clean=True)
+    updater.idle()
+
+if __name__ == '__main__':
+    main()
