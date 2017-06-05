@@ -6,7 +6,8 @@ class BaseTelegramModule(object):
 
     Attributes:
         _telegram_api(:class:`api.TelegramAPI`): Telegram API object which is used in module
-        _storage(:class:`api.Storage`):
+        friendly_name(str): friendly name that will be shown in list
+        disabled(bool): when this evaluates to ``True``, module is considered disabled
 
     Args:
         telegram_api(:class:`api.TelegramAPI`): Telegram API object to use in module
@@ -16,6 +17,7 @@ class BaseTelegramModule(object):
     def __init__(self, telegram_api):
         self._telegram_api = telegram_api
         self.friendly_name = None
+        self.disabled = False
 
     def help(self, message, args):
         """Answers to `/help` message
