@@ -5,6 +5,7 @@ from telegram.ext import (Filters, MessageHandler)
 from telegram.utils.helpers import escape_markdown
 import pickle
 from random import choice
+from threading import Timer
 
 class TelegramModule(BaseTelegramModule):
     def _load(self, filename: str):
@@ -32,6 +33,7 @@ class TelegramModule(BaseTelegramModule):
         self.results_today = {}
         self.chat_users = self._load("chat.pkl")
         self.locks = []
+        Timer(60.0, self.save).start()
         self.TEXT_ALREADY = "Согласно сегодняшнему розыгрышу, *{s} дня* — `{n}`"
         self.TEXTS = [["Итак, кто же сегодня *{s} дня*?", "_Хмм, интересно..._", "*АГА!*",
          "Сегодня ты *{s} дня,* {n}"],
@@ -121,3 +123,9 @@ class TelegramModule(BaseTelegramModule):
         i = choice(list(self.chat_users[chat_id]))
         self.results_today[chat_id][spin_num] = self.chat_users[chat_id][i]
         return self.chat_users[chat_id][i]
+
+
+    def save(self):
+        self._save(self.chat_users, "chat.pkl")
+        self._save(self.spin_name, "spins.pkl")
+        Timer(60.0, self.save).start()
