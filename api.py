@@ -21,7 +21,7 @@ class TelegramAPI(object):
 
     def _register_command(self, command):
         if command in self._commands:
-            raise ValueError(f'Command "{command}" is already registered')
+            raise ValueError('Command "{0}" is already registered'.format(command))
         self._commands.append(command)
 
     def register_command(self, commands, callback, allow_edited=False):
