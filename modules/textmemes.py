@@ -1,5 +1,5 @@
 from bases import BaseTelegramModule
-from random import shuffle
+from random import choice
 
 FACES_LIST = ["ლ(ಠ益ಠლ)", "/╲/\╭( ͡° ͡° ͜ʖ ͡° ͡°)╮/\╱\\", "(;´༎ຶД༎ຶ`)", "♪~ ᕕ(ᐛ)ᕗ", "♥‿♥",
               "▄︻̷̿┻̿═━一", "( ͡°( ͡° ͜ʖ( ͡° ͜ʖ ͡°)ʖ ͡°) ͡°)", "ʕ•ᴥ•ʔ", "(▀̿Ĺ̯▀̿ ̿)", "(ง ͠° ͟ل͜ ͡°)ง",
@@ -33,5 +33,4 @@ class TelegramModule(BaseTelegramModule):
         self._telegram_api.send_text_message(message.chat_id, "¯\_(ツ)_/¯")
 
     def random_face(self, message, args):
-        shuffle(FACES_LIST)
-        self._telegram_api.send_text_message(message.chat_id, FACES_LIST[1])
+        self._telegram_api.send_text_message(message.chat_id, choice(FACES_LIST))
