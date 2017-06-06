@@ -9,8 +9,11 @@ from threading import Timer
 
 class TelegramModule(BaseTelegramModule):
     def _load(self, filename: str):
-        with open(filename, 'rb') as ff:
-            return pickle.load(ff)
+        try:
+            with open(filename, 'rb') as ff:
+                return pickle.load(ff)
+        except Exception:
+            return {}
 
 
     def _save(self, obj: dict, filename: str):
