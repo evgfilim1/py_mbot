@@ -7,6 +7,7 @@ import pickle
 from random import choice
 from threading import Timer
 
+
 class TelegramModule(BaseTelegramModule):
     def _load(self, filename: str):
         try:
@@ -46,7 +47,8 @@ class TelegramModule(BaseTelegramModule):
           "_(нет)_", "На самом деле, это {n}"],
          ["Эмм... Ты уверен?", "Ты *точно* уверен?", "Хотя ладно, процесс уже необратим",
           "Сегодня я назначаю тебе должность *{s} дня*, {n}!"],
-         ["_Ищем рандомного кота на улице..._", "_Ищем палку..._", "_Ищем шапку..._", "_Рисуем ASCII-арт..._",
+         ["_Ищем рандомного кота на улице..._", "_Ищем палку..._",
+          "_Ищем шапку..._", "_Рисуем ASCII-арт..._",
           "*Готово!*", """```
 .∧＿∧
 ( ･ω･｡)つ━☆・*。
