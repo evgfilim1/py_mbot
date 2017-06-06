@@ -101,7 +101,7 @@ class TelegramModule(BaseTelegramModule):
             self.locks.append(chat_id)
             for t in curr_text:
                 self._telegram_api.send_text_message(chat_id, t.format(s=s, n=p),
-                                                     mardown=True)
+                                                     markdown=True)
                 sleep(2)
         self.locks.pop(self.locks.index(chat_id))
 
