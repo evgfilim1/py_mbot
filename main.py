@@ -7,8 +7,7 @@ import time
 # TODO: logging by bot
 logging.basicConfig(level=logging.INFO, format="%(name)s: %(levelname)s: %(message)s")
 
-logger = logging.getLogger("main")
-
+logger = logging.getLogger('main')
 config = ConfigAPI('main')
 tr = LangAPI('main')
 
@@ -30,11 +29,11 @@ def help(bot, update, args):
     else:
         module_name = " ".join(args)
         if module_name in modloader.DISABLED or module_name in modloader.FAILURE:
-            update.effective_message.reply_text("Module is disabled")
+            update.effective_message.reply_text('Module is disabled')
         elif module_name in modloader.ENABLED:
             modloader.ENABLED.get(module_name).help(update.effective_message, [])
         else:
-            update.effective_message.reply_text("Module not found")
+            update.effective_message.reply_text('Module not found')
 
 
 def about(bot, update):
@@ -55,7 +54,7 @@ def module_list(bot, update):
         disabled_modlist += ' - {0}\n'.format(module_name)
     update.effective_message.reply_text(tr(lang, 'modules').format(modlist, fail_modlist,
                                                                    disabled_modlist),
-                                        parse_mode="HTML")
+                                        parse_mode='HTML')
 
 
 def main():
@@ -69,7 +68,7 @@ def main():
 
     updater.start_polling(clean=True)
 
-    logger.info("Bot started in %fs", (time.time() - start_time))
+    logger.info('Bot started in {0}'.format(time.time() - start_time))
 
     updater.idle()
 
