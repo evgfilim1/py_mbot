@@ -8,7 +8,8 @@ class TelegramModule(BaseTelegramModule):
         self._register_module()
 
     def help(self, message, args):
-        self._telegram_api.send_text_message(message.chat_id, 'Equivalent of IRC /me command')
+        self._telegram_api.send_text_message(message.chat_id, 'Equivalent of IRC /me command',
+                                             reply_to=message.message_id)
 
     def me(self, message, args):
         self._telegram_api.send_text_message(message.chat_id,

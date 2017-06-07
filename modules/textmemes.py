@@ -27,7 +27,7 @@ class TelegramModule(BaseTelegramModule):
 
     def help(self, message, args):
         self._telegram_api.send_text_message(message.chat_id, "This module sends /shrug, "
-                                             "/lenny or /random_face")
+                                             "/lenny or /random_face", reply_to=message.message_id)
 
     def lenny(self, message, args):
         self._telegram_api.send_text_message(message.chat_id, "( ͡° ͜ʖ ͡° )")

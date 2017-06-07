@@ -58,7 +58,8 @@ class TelegramAPI(object):
         self._dispatcher.add_handler(MessageHandler(Filters.text, process_update,
                                                     edited_updates=allow_edited))
 
-    def send_text_message(self, chat, text, markdown=False, html=False, reply_to=None, **kwargs):
+    def send_text_message(self, chat, text, markdown=False, html=False, reply_to=None,
+                          force_reply_to=False, **kwargs):
         """Sends message
 
         Notes:
@@ -70,6 +71,7 @@ class TelegramAPI(object):
             markdown(Optional[bool]): parse text as markdown
             html(Optional[bool]): parse text as html
             reply_to(Optional[int]): ID of message to reply to
+            force_reply_to(Optional[bool]): Replies to message even in private chats
 
         Returns:
             bool: ``True`` if message was sent, ``False`` otherwise
@@ -87,6 +89,9 @@ class TelegramAPI(object):
             parse_mode = ParseMode.HTML
         else:
             parse_mode = None
+
+        if reply_to and self.is_private_chat(chat) and not force_reply_to:
+            reply_to = None
 
         try:
             self._bot.send_message(chat, text, parse_mode=parse_mode, reply_to_message_id=reply_to,
@@ -162,7 +167,7 @@ class TelegramAPI(object):
             ValueError: if both ``user_id`` and ``user`` were (not) given
 
         """
-        if user_id is None and user is None:
+        if (user_id is None and user is None) or (user_id is not None and user is not None):
             raise ValueError('Either `user_id` or `user` must be given')
         if user is not None:
             user_id = user.id
@@ -207,6 +212,19 @@ class TelegramAPI(object):
             return [admin.user.id for admin in admins]
         else:
             return list(admins)
+
+    @staticmethod
+    def is_private_chat(chat):
+        """Checks whether ``chat`` is private chat
+
+        Notes:
+            If ``chat`` is str, it is considered as channel
+
+        Args:
+            chat(int|str): chat ID or '@channel_name' to check
+
+        """
+        return isinstance(chat, int) and chat > 0
 
     @property
     def bot_id(self):

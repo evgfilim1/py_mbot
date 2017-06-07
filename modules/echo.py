@@ -10,7 +10,8 @@ class TelegramModule(BaseTelegramModule):
 
     def help(self, message, args):
         self._telegram_api.send_text_message(message.chat_id,
-                                             'This module simply echoes every text message')
+                                             'This module simply echoes every text message',
+                                             reply_to=message.message_id)
 
     def echo(self, message):
         self._telegram_api.send_text_message(message.chat_id, message.text)
