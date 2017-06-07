@@ -2,6 +2,7 @@ import logging
 from telegram.ext import Updater, CommandHandler
 from api import ConfigAPI, LangAPI
 import modloader
+import time
 
 # TODO: logging by bot
 logging.basicConfig(level=logging.INFO)
@@ -11,6 +12,8 @@ tr = LangAPI('main')
 
 updater = Updater(config['token'])
 dp = updater.dispatcher
+
+start_time = time.time()
 
 
 def start(bot, update):
@@ -63,6 +66,9 @@ def main():
     dp.add_error_handler(lambda bot, update, error: print(error))
 
     updater.start_polling(clean=True)
+
+    print("\nBot started in %fs" % (time.time() - start_time))
+
     updater.idle()
 
 if __name__ == '__main__':
