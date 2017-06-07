@@ -16,7 +16,6 @@ dp = updater.dispatcher
 
 start_time = time.time()
 
-
 def start(bot, update):
     lang = update.effective_user.language_code
     update.effective_message.reply_text(tr(lang, 'start'))
