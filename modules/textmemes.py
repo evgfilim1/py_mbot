@@ -26,14 +26,14 @@ class TelegramModule(BaseTelegramModule):
         self._register_module()
 
     def help(self, message, args):
-        self._telegram_api.send_text_message(message.chat_id, "This module sends /shrug, "
-                                             "/lenny or /random_face", reply_to=message.message_id)
+        self._telegram_api.send_text_message(message.chat_id, 'This module sends /shrug, '
+                                             '/lenny or /random_face', reply_to=message.message_id)
 
     def lenny(self, message, args):
-        self._telegram_api.send_text_message(message.chat_id, "( ͡° ͜ʖ ͡° )")
+        self._telegram_api.send_text_message(message.chat_id, '( ͡° ͜ʖ ͡° )')
 
     def shrug(self, message, args):
-        self._telegram_api.send_text_message(message.chat_id, "¯\_(ツ)_/¯")
+        self._telegram_api.send_text_message(message.chat_id, '¯\_(ツ)_/¯')
 
     def random_face(self, message, args):
         self._telegram_api.send_text_message(message.chat_id, choice(FACES_LIST))  # random face

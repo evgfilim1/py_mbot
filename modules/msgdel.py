@@ -10,9 +10,9 @@ class TelegramModule(BaseTelegramModule):
 
     def help(self, message, args):
         self._telegram_api.send_text_message(message.chat_id,
-                                             "This module helps to delete any message sent by bot"
-                                             "\nUsage:\nReply to message which you want to delete "
-                                             "and type /delete", reply_to=message.message_id)
+                                             'This module helps to delete any message sent by bot'
+                                             '\nUsage:\nReply to message which you want to delete '
+                                             'and type /delete', reply_to=message.message_id)
 
     def delete(self, message, args):
         if message.reply_to_message.from_user.id == self._telegram_api.bot_id:

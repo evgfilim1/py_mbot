@@ -4,8 +4,7 @@ from api import ConfigAPI, LangAPI
 import modloader
 import time
 
-# TODO: logging by bot
-logging.basicConfig(level=logging.INFO, format="%(name)s: %(levelname)s: %(message)s")
+logging.basicConfig(level=logging.INFO, format='%(name)s: %(levelname)s: %(message)s')
 
 logger = logging.getLogger('main')
 config = ConfigAPI('main')
@@ -15,6 +14,7 @@ updater = Updater(config['token'])
 dp = updater.dispatcher
 
 start_time = time.time()
+
 
 def start(bot, update):
     lang = update.effective_user.language_code

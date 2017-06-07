@@ -13,5 +13,5 @@ class TelegramModule(BaseTelegramModule):
 
     def me(self, message, args):
         self._telegram_api.send_text_message(message.chat_id,
-                                             "{0} {1}".format(message.from_user.name,
+                                             '{0} {1}'.format(message.from_user.name,
                                                               ' '.join(args)))

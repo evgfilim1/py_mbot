@@ -81,7 +81,7 @@ class TelegramAPI(object):
 
         """
         if markdown and html:
-            raise ValueError("`markdown` and `html` are self-exclusive")
+            raise ValueError('`markdown` and `html` are self-exclusive')
 
         if markdown:
             parse_mode = ParseMode.MARKDOWN

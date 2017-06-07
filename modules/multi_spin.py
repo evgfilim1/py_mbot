@@ -6,6 +6,7 @@ from telegram.utils.helpers import escape_markdown
 import pickle
 from random import choice
 from threading import Timer
+# TODO: improve this
 
 
 class TelegramModule(BaseTelegramModule):
