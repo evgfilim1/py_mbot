@@ -5,7 +5,9 @@ import modloader
 import time
 
 # TODO: logging by bot
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.INFO, format="%(name)s: %(levelname)s: %(message)s")
+
+logger = logging.getLogger("main")
 
 config = ConfigAPI('main')
 tr = LangAPI('main')
@@ -67,7 +69,7 @@ def main():
 
     updater.start_polling(clean=True)
 
-    print("\nBot started in %fs" % (time.time() - start_time))
+    logger.info("Bot started in %fs", (time.time() - start_time))
 
     updater.idle()
 
