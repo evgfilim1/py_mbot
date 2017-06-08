@@ -1,4 +1,5 @@
 import logging
+from telegram import ParseMode
 from telegram.ext import Updater, CommandHandler
 from api import ConfigAPI, LangAPI
 import modloader
@@ -30,7 +31,11 @@ def help(bot, update, args):
         if module_name in modloader.DISABLED or module_name in modloader.FAILURE:
             update.effective_message.reply_text('Module is disabled')
         elif module_name in modloader.ENABLED:
-            modloader.ENABLED.get(module_name).help(update.effective_message, [])
+            try:
+                modloader.ENABLED.get(module_name).help(update.effective_message, [])
+            except NotImplementedError:
+                update.effective_message.reply_text('Module developer had not implemented `help()`',
+                                                    parse_mode=ParseMode.MARKDOWN)
         else:
             update.effective_message.reply_text('Module not found')
 
