@@ -13,6 +13,10 @@ def load_modules(updater):
     telegram_api = api.TelegramAPI(updater)
 
     for module_name in listdir('./modules'):
+        if module_name.startswith('_'):
+            logger.info('Skipped module "{0}"'.format(module_name))
+            continue
+
         if module_name.endswith('.py'):
             module_name = module_name[:-3]
         try:
