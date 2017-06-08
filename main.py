@@ -72,7 +72,7 @@ def main():
 
     updater.start_polling(clean=True)
 
-    logger.info('Bot started in {0}'.format(time.time() - start_time))
+    logger.info('Bot started in {0:.3} seconds'.format(time.time() - start_time))
 
     updater.idle()
 

@@ -10,9 +10,8 @@ class TelegramModule(BaseTelegramModule):
     """
     def __init__(self, telegram_api):
         super(TelegramModule, self).__init__(telegram_api)
-        self.commands = ((['ping'], self.ping), )
+        self._telegram_api.register_command(['ping'], self.ping)
         self.friendly_name = 'PingModule'
-        self._register_module()
 
     def help(self, message, args):
         """Answers to `/help` message

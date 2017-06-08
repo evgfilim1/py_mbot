@@ -1,12 +1,15 @@
 from bases import BaseTelegramModule
 
+# TODO: refactor
+
 
 class TelegramModule(BaseTelegramModule):
     def __init__(self, telegram_api):
         super(TelegramModule, self).__init__(telegram_api)
-        self.commands = ((['kick'], self.kick), (['ban'], self.ban), (['unban'], self.unban))
+        self._telegram_api.register_command(['kick'], self.kick)
+        self._telegram_api.register_command(['ban'], self.ban)
+        self._telegram_api.register_command(['unban'], self.unban)
         self.friendly_name = 'AdminModule'
-        self._register_module()
 
     def help(self, message, args):
         self._telegram_api.send_text_message(message.chat_id,

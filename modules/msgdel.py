@@ -4,9 +4,8 @@ from bases import BaseTelegramModule
 class TelegramModule(BaseTelegramModule):
     def __init__(self, telegram_api):
         super(TelegramModule, self).__init__(telegram_api)
-        self.commands = ((['delete'], self.delete), )
+        self._telegram_api.register_command(['delete'], self.delete)
         self.friendly_name = 'DeleteMessageModule'
-        self._register_module()
 
     def help(self, message, args):
         self._telegram_api.send_text_message(message.chat_id,

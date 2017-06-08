@@ -2,11 +2,11 @@ from bases import BaseTelegramModule
 
 
 class TelegramModule(BaseTelegramModule):
+    disabled = True
+
     def __init__(self, telegram_api):
         super(TelegramModule, self).__init__(telegram_api)
-        self.text_handler = (self.echo, )
-        self.disabled = True
-        self._register_module()
+        self._telegram_api.register_text_handler(self.echo)
 
     def help(self, message, args):
         self._telegram_api.send_text_message(message.chat_id,

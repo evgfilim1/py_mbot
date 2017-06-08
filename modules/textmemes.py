@@ -20,10 +20,9 @@ FACES_LIST = ["ლ(ಠ益ಠლ)", "/╲/\╭( ͡° ͡° ͜ʖ ͡° ͡°)╮/\╱
 class TelegramModule(BaseTelegramModule):
     def __init__(self, telegram_api):
         super(TelegramModule, self).__init__(telegram_api)
-        self.commands = ((['lenny'], self.lenny),
-                         (['shrug'], self.shrug),
-                         (['random_face'], self.random_face))
-        self._register_module()
+        self._telegram_api.register_command(['lenny'], self.lenny)
+        self._telegram_api.register_command(['shrug'], self.shrug),
+        self._telegram_api.register_command(['random_face'], self.random_face)
 
     def help(self, message, args):
         self._telegram_api.send_text_message(message.chat_id, 'This module sends /shrug, '
