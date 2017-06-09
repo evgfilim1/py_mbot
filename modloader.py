@@ -14,13 +14,29 @@ def load_modules(updater):
     global MODULE_COUNT
     telegram_api = api.TelegramAPI(updater)
 
-    for module_name in listdir('./modules'):
-        if module_name.endswith('.py'):
-            module_name = module_name[:-3]
-        if module_name.startswith('_'):
-            logger.info('Skipping module "{0}"'.format(module_name))
+    modules = []
+    blacklisted_modules = []
+    for filename in listdir('./modules'):
+        if filename.startswith('_'):
+            logger.info('Skipping module "{0}"'.format(filename))
             continue
+        if filename.endswith('.py'):
+            filename = filename[:-3]
+        elif filename.endswith('.pyc'):
+            filename = filename[:-4]
+        if filename in modules:
+            logger.warning('Conflicting modules with the same name: "{0}", '
+                           'skipping all...'.format(filename))
+            modules.pop(modules.index(filename))
+            blacklisted_modules.append(filename)
+        if filename in blacklisted_modules:
+            continue
+        modules.append(filename)
 
+    for module_name in blacklisted_modules:
+        FAILURE.update({module_name: 'conflicting modules with the same name'})
+
+    for module_name in modules:
         try:
             logger.info('Loading module "{0}"... '.format(module_name))
             current_module = getattr(__import__('modules.{0}'.format(module_name)), module_name)
@@ -34,15 +50,20 @@ def load_modules(updater):
             FAILURE.update({module_name: str(e)})
             continue
 
+        filename = module_name
         if loaded_module.friendly_name:
-            module_name = loaded_module.friendly_name
+            friendly_module_name = loaded_module.friendly_name
+        else:
+            friendly_module_name = module_name
 
-        if module_name in ENABLED or module_name in DISABLED:
-            FAILURE.update({module_name: 'Module is already loaded'})
-            logger.warning('Module "{0}" is already loaded'.format(module_name))
+        if friendly_module_name in ENABLED or friendly_module_name in DISABLED:
+            logger.warning('Module "{0}" is already loaded, '
+                           'using "{1}" as module name'.format(friendly_module_name, filename))
+            friendly_module_name = filename
 
-        ENABLED.update({module_name: loaded_module})
-        logger.info('Module "{0}" loaded successfully'.format(module_name))
+        ENABLED.update({friendly_module_name: loaded_module})
+        logger.info('Module "{0}" ("{1}") loaded successfully'.format(module_name,
+                                                                      friendly_module_name))
         MODULE_COUNT += 1
 
     logger.info('Loaded {0} modules'.format(MODULE_COUNT))
