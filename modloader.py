@@ -37,10 +37,11 @@ def load_modules(updater):
         FAILURE.update({module_name: 'conflicting modules with the same name'})
 
     for module_name in modules:
+        lang = api.LangAPI(module_name)
         try:
             logger.info('Loading module "{0}"... '.format(module_name))
             current_module = getattr(__import__('modules.{0}'.format(module_name)), module_name)
-            loaded_module = current_module.TelegramModule(telegram_api)
+            loaded_module = current_module.TelegramModule(telegram_api, lang)
         except InterruptedError:
             logger.info('Skipping module "{0}": module is disabled'.format(module_name))
             DISABLED.append(module_name)

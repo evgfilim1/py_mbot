@@ -1,0 +1,6 @@
+{
+  "en": {
+    "help": "This module just replies \"Pong!\" to /ping command",
+    "pong": "Pong!"
+  }
+}

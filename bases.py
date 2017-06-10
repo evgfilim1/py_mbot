@@ -6,27 +6,31 @@ class BaseTelegramModule(object):
 
     Attributes:
         _telegram_api(:class:`api.TelegramAPI`): Telegram API object which is used in module
+        _tr(:class:`api.LangAPI`): LangAPI object which is used in module
         friendly_name(str): friendly name that will be shown in list
         disabled(bool): when this evaluates to ``True``, module is considered disabled
 
     Args:
         telegram_api(:class:`api.TelegramAPI`): Telegram API object to use in module
+        lang(:class:`api.LangAPI`): LangAPI object to use in module
 
     """
     disabled = False
 
-    def __init__(self, telegram_api):
+    def __init__(self, telegram_api, lang):
         if self.disabled:
             raise InterruptedError('Module is disabled')
         self._telegram_api = telegram_api
+        self._tr = lang
         self.friendly_name = None
 
-    def help(self, message, args):
+    def help(self, message, args, lang):
         """Answers to `/help` message
 
         Args:
             message(:class:`telegram.Message`): received message
             args(list): message arguments
+            lang(str|NoneType): user language (``None`` if cannot be determined)
 
         """
         raise NotImplementedError('This method must be implemented')

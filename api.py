@@ -41,7 +41,8 @@ class TelegramAPI(object):
 
         def process_update(bot, update):
             callback(update.effective_message,
-                     update.effective_message.text.split(' ')[1:])
+                     update.effective_message.text.split(' ')[1:],
+                     update.effective_user.language_code)
         self._dispatcher.add_handler(CommandHandler(commands, process_update,
                                                     allow_edited=allow_edited))
 

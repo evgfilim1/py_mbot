@@ -1,0 +1,8 @@
+{
+  "en": {
+    "help": "This module replies to /whoami with user info\n\nAliases: /who, /whois",
+    "info_common": "You are {0}\nYour ID: {1}\n",
+    "info_reply": "Replied to {0}\nReplied to ID: {1}\n",
+    "info_forward": "Forwarded from {0}\nForwarded from ID: {1}"
+  }
+}

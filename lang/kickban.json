@@ -1,0 +1,9 @@
+{
+  "en": {
+    "help": "This module helps to administrate groups\nAvailable commands:\n/kick - kicks user from chat\n/ban - bans user from chat\n/unban - unbans user",
+    "not_admin": "You have no power!",
+    "kicked": "{0} kicked {1}",
+    "banned": "{0} banned {1}",
+    "unbanned": "{0} unbanned {1}"
+  }
+}

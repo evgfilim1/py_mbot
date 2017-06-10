@@ -32,7 +32,7 @@ def help(bot, update, args):
             update.effective_message.reply_text('Module is disabled')
         elif module_name in modloader.ENABLED:
             try:
-                modloader.ENABLED.get(module_name).help(update.effective_message, [])
+                modloader.ENABLED.get(module_name).help(update.effective_message, [], lang)
             except NotImplementedError:
                 update.effective_message.reply_text('Module developer had not implemented `help()`',
                                                     parse_mode=ParseMode.MARKDOWN)

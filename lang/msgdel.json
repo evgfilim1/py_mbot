@@ -1,0 +1,5 @@
+{
+  "en": {
+    "help": "This module helps to delete any message sent by bot\nUsage:\nReply to message which you want to delete and type /delete"
+  }
+}

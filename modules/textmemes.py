@@ -18,21 +18,21 @@ FACES_LIST = ["ლ(ಠ益ಠლ)", "/╲/\╭( ͡° ͡° ͜ʖ ͡° ͡°)╮/\╱
 
 
 class TelegramModule(BaseTelegramModule):
-    def __init__(self, telegram_api):
-        super(TelegramModule, self).__init__(telegram_api)
+    def __init__(self, *args):
+        super(TelegramModule, self).__init__(*args)
         self._telegram_api.register_command(['lenny'], self.lenny)
         self._telegram_api.register_command(['shrug'], self.shrug),
         self._telegram_api.register_command(['random_face'], self.random_face)
 
-    def help(self, message, args):
-        self._telegram_api.send_text_message(message.chat_id, 'This module sends /shrug, '
-                                             '/lenny or /random_face', reply_to=message.message_id)
+    def help(self, message, args, lang):
+        self._telegram_api.send_text_message(message.chat_id, self._tr(lang, 'help'),
+                                             reply_to=message.message_id)
 
-    def lenny(self, message, args):
+    def lenny(self, message, args, lang):
         self._telegram_api.send_text_message(message.chat_id, '( ͡° ͜ʖ ͡° )')
 
-    def shrug(self, message, args):
+    def shrug(self, message, args, lang):
         self._telegram_api.send_text_message(message.chat_id, '¯\_(ツ)_/¯')
 
-    def random_face(self, message, args):
+    def random_face(self, message, args, lang):
         self._telegram_api.send_text_message(message.chat_id, choice(FACES_LIST))  # random face
