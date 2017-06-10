@@ -2,5 +2,13 @@
   "en": {
     "help": "This module just replies \"Pong!\" to /ping command",
     "pong": "Pong!"
+  },
+  "ru": {
+    "help": "Этот модуль отвечает \"Pong!\" на /ping command",
+    "pong": "Понг!"
+  },
+  "aue": {
+    "help": "Этот модуль малявит \"Ёпаа!\" на /ping command",
+    "pong": "Ёпаа!"
   }
 }

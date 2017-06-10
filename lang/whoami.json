@@ -4,5 +4,17 @@
     "info_common": "You are {0}\nYour ID: {1}\n",
     "info_reply": "Replied to {0}\nReplied to ID: {1}\n",
     "info_forward": "Forwarded from {0}\nForwarded from ID: {1}"
+  },
+  "ru": {
+    "help": "Этот модуль отвечает на /whoami информацией о пользователе\n\nАльтернативы: /who, /whois",
+    "info_common": "Вы {0}\nВаш АйДи: {1}\n",
+    "info_reply": "Отвечено на {0}\nОтвечено на АйДи: {1}\n",
+    "info_forward": "Отослано с {0}\nОтослано с АйДи: {1}"
+  },
+  "aue": {
+    "help": "Малявит на /whoami твоим досье\n\nПогоняла: /who, /whois",
+    "info_common": "Ты {0}\nТвой номерок: {1}\n",
+    "info_reply": "Малявено на {0}\nМалявено с номера: {1}\n",
+    "info_forward": "грандМалявено с {0}\nграндМалявено с номерка: {1}"
   }
 }

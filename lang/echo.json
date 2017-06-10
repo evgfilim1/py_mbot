@@ -1,5 +1,11 @@
 {
   "en": {
     "help": "This module simply echoes every text message"
+  },
+  "ru": {
+    "help": "Этот модуль дразнит вас"
+  },
+  "aue": {
+    "help": "Эта железка гонит на тебя!"
   }
 }
