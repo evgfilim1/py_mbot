@@ -3,9 +3,9 @@
     "help": "Equivalent of IRC /me command"
   },
   "ru": {
-    "help" : "Эквивалент Ирки /me command"
+    "help" : "Эквивалент Ирки /me комманда"
   },
   "aue": {
-    "help" : "Ирка всем на районе /me command"
+    "help" : "Ирка всем на районе /me позыв"
   }
 }
