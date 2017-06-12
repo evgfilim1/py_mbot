@@ -1,5 +1,11 @@
 {
   "en": {
     "help": "This module helps to delete any message sent by bot\nUsage:\nReply to message which you want to delete and type /delete"
+  },
+  "ru": {
+    "help": "Этот модуль удаляет сообщения, отправленные ботом\nКак использовать:\nОтветить на сообщение, которое вы хотите удалить, и написать /delete"
+  },
+  "aue": {
+    "help": "Здесь ты могёшь поправить хистори\nКак выполнить, ёпа:\n Малявить на весточку которую хошь подтереть /delete"
   }
 }

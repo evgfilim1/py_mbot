@@ -1,5 +1,11 @@
 {
   "en": {
     "help": "This module sends /shrug, /lenny or /random_face"
+  },
+  "ru": {
+    "help": "Этот модуль отправляет /shrug, /lenny или /random_face"
+  },
+  "aue": {
+    "help": "Малявит /shrug, /lenny орр /random_face"
   }
 }

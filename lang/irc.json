@@ -1,5 +1,11 @@
 {
   "en": {
     "help": "Equivalent of IRC /me command"
+  },
+  "ru": {
+    "help" : "Эквивалент команды /me в Ирке"
+  },
+  "aue": {
+    "help" : "Ирка всем на районе /me"
   }
 }
