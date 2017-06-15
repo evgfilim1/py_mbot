@@ -76,11 +76,11 @@ def settings(bot, update):
     keyboard = []
     for i, (lang, flag) in enumerate(config.flags.items()):
         text = '{0} {1}'.format(flag, lang)
-        data = 'settings:lang:{0}'.format(lang)
+        callback_data = 'settings:lang:{0}'.format(lang)
         if i % 2 == 0:
-            keyboard.append([InlineKeyboardButton(text, callback_data=data)])
+            keyboard.append([InlineKeyboardButton(text, callback_data=callback_data)])
         else:
-            keyboard[-1].append(InlineKeyboardButton(text, callback_data=data))
+            keyboard[-1].append(InlineKeyboardButton(text, callback_data=callback_data))
     update.message.reply_text('Choose your language',
                               reply_markup=InlineKeyboardMarkup(keyboard))
 
@@ -116,7 +116,6 @@ def main():
     updater.idle()
 
     data.save()
-    data._close()
 
 if __name__ == '__main__':
     main()

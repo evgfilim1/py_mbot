@@ -308,23 +308,16 @@ class LangAPI(JSONAPI):
 
 class StorageAPI(object):
     @utils.log(logger, print_ret=False)
-    def __init__(self, name, load=True, autocommit=True):
+    def __init__(self, name, load=True, autosave=True):
         from os import path, mkdir
         if not path.exists('./data'):
             logger.debug('Creating data directory...')
             mkdir('./data')
-        try:
-            self._file = open('./data/{0}.pkl'.format(name), 'r+b')
-        except FileNotFoundError:
-            self._file = open('./data/{0}.pkl'.format(name), 'wb')
-        self._autocommit = autocommit
+        self._file = './data/{0}.pkl'.format(name)
+        self._autosave = autosave
         self._data = None
         if load:
             self.load()
-
-    # @utils.log(logger)
-    def __del__(self):
-        self._file.close()
 
     @utils.log(logger)
     def __getattr__(self, item):
@@ -332,10 +325,10 @@ class StorageAPI(object):
 
     @utils.log(logger, print_args=True)
     def __setattr__(self, key, value):
-        if self.__dict__.get('_data') is not None:
+        if key[0] != '_':
             logger.debug('Setting data key')
             self.__dict__['_data'][key] = value
-            if self._autocommit:
+            if self._autosave:
                 self.save()
         else:
             logger.debug('Setting class property')
@@ -352,26 +345,21 @@ class StorageAPI(object):
     @utils.log(logger)
     def load(self):
         try:
-            self._data = pickle.load(self._file)
-        except (TypeError, EOFError) as e:
-            # TypeError: file must have 'read' and 'readline' attributes
-            # EOFError: Ran out of input
+            with open(self._file, 'rb') as file:
+                self._data = pickle.load(file)
+        except FileNotFoundError:
             self._data = {}
-        except Exception as e:
-            logger.exception('Exception in `StorageAPI` was raised', exc_info=e)
-        return True
-
-    @utils.log(logger)
-    def save(self):
-        try:
-            pickle.dump(self._data, self._file, pickle.HIGHEST_PROTOCOL)
-            self._file.flush()
         except Exception as e:
             logger.exception('Exception in `StorageAPI` was raised', exc_info=e)
             return False
         return True
 
-    @utils.log(logger, print_ret=False)
-    def _close(self):
-        self._file.close()
-        self.__dict__['_data'] = None
+    @utils.log(logger)
+    def save(self):
+        try:
+            with open(self._file, 'wb') as file:
+                pickle.dump(self._data, file, pickle.HIGHEST_PROTOCOL)
+        except Exception as e:
+            logger.exception('Exception in `StorageAPI` was raised', exc_info=e)
+            return False
+        return True
