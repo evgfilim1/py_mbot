@@ -1,6 +1,11 @@
 from bases import JSONAPI
 from telegram import ParseMode, TelegramError
 from telegram.ext import CommandHandler, MessageHandler, Filters
+import utils
+import pickle
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class TelegramAPI(object):
@@ -11,19 +16,24 @@ class TelegramAPI(object):
 
     Args:
         updater(:class:`telegram.ext.Updater`): updater instance
+        storage(:class:`api.StorageAPI`): data for ``main.py``
 
     """
     _commands = []
 
-    def __init__(self, updater):
+    @utils.log(logger, print_ret=False)
+    def __init__(self, updater, storage):
         self._bot = updater.bot
         self._dispatcher = updater.dispatcher
+        self._storage = storage
 
+    @utils.log(logger, print_ret=False)
     def _register_command(self, command):
         if command in self._commands:
             raise ValueError('Command "{0}" is already registered'.format(command))
         self._commands.append(command)
 
+    @utils.log(logger, print_ret=False)
     def register_command(self, commands, callback, allow_edited=False):
         """Registers commands handler
 
@@ -39,13 +49,15 @@ class TelegramAPI(object):
         for command in commands:
             self._register_command(command)
 
+        @utils.log(logger, print_ret=False)
         def process_update(bot, update):
+            lang = utils.get_lang(self._storage, update.effective_user)
             callback(update.effective_message,
-                     update.effective_message.text.split(' ')[1:],
-                     update.effective_user.language_code)
+                     update.effective_message.text.split(' ')[1:], lang)
         self._dispatcher.add_handler(CommandHandler(commands, process_update,
                                                     allow_edited=allow_edited))
 
+    @utils.log(logger, print_ret=False)
     def register_text_handler(self, callback, allow_edited=False):
         """Registers text message handler
 
@@ -54,11 +66,14 @@ class TelegramAPI(object):
             allow_edited(Optional[bool]): pass edited messages
 
         """
+        @utils.log(logger, print_ret=False)
         def process_update(bot, update):
-            callback(update.effective_message)
+            lang = utils.get_lang(self._storage, update.effective_user)
+            callback(update.effective_message, lang)
         self._dispatcher.add_handler(MessageHandler(Filters.text, process_update,
                                                     edited_updates=allow_edited))
 
+    @utils.log(logger)
     def send_text_message(self, chat, text, markdown=False, html=False, reply_to=None,
                           force_reply_to=False, **kwargs):
         """Sends message
@@ -97,10 +112,12 @@ class TelegramAPI(object):
         try:
             self._bot.send_message(chat, text, parse_mode=parse_mode, reply_to_message_id=reply_to,
                                    **kwargs)
-        except TelegramError:
+        except TelegramError as e:
+            logger.exception('Exception was raised while sending message', exc_info=e)
             return False
         return True
 
+    @utils.log(logger)
     def delete_message(self, chat=None, message_id=None, message=None):
         """Deletes message
 
@@ -124,9 +141,11 @@ class TelegramAPI(object):
 
         try:
             return self._bot.delete_message(chat, message_id)
-        except TelegramError:
+        except TelegramError as e:
+            logger.exception('Exception was raised while deleting message', exc_info=e)
             return False
 
+    @utils.log(logger)
     def ban_member(self, chat, user_id=None, user=None):
         """Bans chat member
 
@@ -149,10 +168,12 @@ class TelegramAPI(object):
 
         try:
             self._bot.kick_chat_member(chat, user_id)
-        except TelegramError:
+        except TelegramError as e:
+            logger.exception('Exception was raised while kicking member', exc_info=e)
             return False
         return True
 
+    @utils.log(logger)
     def unban_member(self, chat, user_id=None, user=None):
         """Unbans chat member
 
@@ -175,10 +196,12 @@ class TelegramAPI(object):
 
         try:
             self._bot.unban_chat_member(chat, user_id)
-        except TelegramError:
+        except TelegramError as e:
+            logger.exception('Exception was raised while unbanning member', exc_info=e)
             return False
         return True
 
+    @utils.log(logger)
     def kick_member(self, chat, user_id=None, user=None):
         """Kicks chat member
 
@@ -196,6 +219,7 @@ class TelegramAPI(object):
         """
         return self.ban_member(chat, user_id, user) and self.unban_member(chat, user_id, user)
 
+    @utils.log(logger)
     def get_admins(self, chat, use_ids=False):
         """Get chat administrators and return them
 
@@ -215,6 +239,7 @@ class TelegramAPI(object):
             return list(admins)
 
     @staticmethod
+    @utils.log(logger)
     def is_private_chat(chat):
         """Checks whether ``chat`` is private chat
 
@@ -239,6 +264,7 @@ class ConfigAPI(JSONAPI):
         name(str): module name
 
     """
+    @utils.log(logger, print_ret=False)
     def __init__(self, name):
         super(ConfigAPI, self).__init__('config', name)
 
@@ -258,15 +284,18 @@ class LangAPI(JSONAPI):
 
     """
     # TODO: use built-in python translation library
+    @utils.log(logger, print_ret=False)
     def __init__(self, name):
         super(LangAPI, self).__init__('lang', name)
 
+    @utils.log(logger)
     def __getitem__(self, item):
         if item is None:
             return None
-        lang = item.split('-')[0].lower()
-        return self._raw_data.get(lang, None)
+        lang = item.split('-')[0]
+        return super(LangAPI, self).__getitem__(lang)
 
+    @utils.log(logger)
     def __call__(self, lang, string):
         tr = self[lang]
         if lang is not None:
@@ -275,3 +304,74 @@ class LangAPI(JSONAPI):
         if tr is None:
             return self['en'].get(string.lower(), None)
         return tr
+
+
+class StorageAPI(object):
+    @utils.log(logger, print_ret=False)
+    def __init__(self, name, load=True, autocommit=True):
+        from os import path, mkdir
+        if not path.exists('./data'):
+            logger.debug('Creating data directory...')
+            mkdir('./data')
+        try:
+            self._file = open('./data/{0}.pkl'.format(name), 'r+b')
+        except FileNotFoundError:
+            self._file = open('./data/{0}.pkl'.format(name), 'wb')
+        self._autocommit = autocommit
+        self._data = None
+        if load:
+            self.load()
+
+    # @utils.log(logger)
+    def __del__(self):
+        self._file.close()
+
+    @utils.log(logger)
+    def __getattr__(self, item):
+        return self._data.get(item)
+
+    @utils.log(logger, print_args=True)
+    def __setattr__(self, key, value):
+        if self.__dict__.get('_data') is not None:
+            logger.debug('Setting data key')
+            self.__dict__['_data'][key] = value
+            if self._autocommit:
+                self.save()
+        else:
+            logger.debug('Setting class property')
+            super(StorageAPI, self).__setattr__(key, value)
+
+    @utils.log(logger, print_ret=False)
+    def __delattr__(self, item):
+        del self._data[item]
+
+    @property
+    def raw_data(self):
+        return self._data
+
+    @utils.log(logger)
+    def load(self):
+        try:
+            self._data = pickle.load(self._file)
+        except (TypeError, EOFError) as e:
+            # TypeError: file must have 'read' and 'readline' attributes
+            # EOFError: Ran out of input
+            self._data = {}
+        except Exception as e:
+            logger.exception('Exception in `StorageAPI` was raised', exc_info=e)
+        return True
+
+    @utils.log(logger)
+    def save(self):
+        try:
+            pickle.dump(self._data, self._file, pickle.HIGHEST_PROTOCOL)
+            self._file.flush()
+        except Exception as e:
+            logger.exception('Exception in `StorageAPI` was raised', exc_info=e)
+            return False
+        return True
+
+    @utils.log(logger, print_ret=False)
+    def _close(self):
+        self._file.close()
+        self.__dict__['_data'] = None

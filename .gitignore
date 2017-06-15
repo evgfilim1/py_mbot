@@ -1,3 +1,5 @@
 /config/main.json
 __pycache__
 *.swp
+*.pkl
+/bot.log

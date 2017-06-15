@@ -13,5 +13,5 @@ class TelegramModule(BaseTelegramModule):
                                              self._tr(lang, 'help'),
                                              reply_to=message.message_id)
 
-    def echo(self, message):
+    def echo(self, message, lang):
         self._telegram_api.send_text_message(message.chat_id, message.text)

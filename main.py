@@ -1,29 +1,37 @@
 import logging
-from telegram import ParseMode
-from telegram.ext import Updater, CommandHandler
-from api import ConfigAPI, LangAPI
+from telegram import ParseMode, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram.ext import Updater, CommandHandler, CallbackQueryHandler
+from api import ConfigAPI, LangAPI, StorageAPI
 import modloader
+import utils
 import time
 
-logging.basicConfig(level=logging.INFO, format='%(name)s: %(levelname)s: %(message)s')
+logging.basicConfig(level=logging.DEBUG,
+                    format='[{levelname:<9}] ({asctime}) {name}: {message}',
+                    style='{', filename='bot.log')
 
-logger = logging.getLogger('main')
+logger = logging.getLogger(__name__)
+logger.debug('Starting py_mbot...')
+
+data = StorageAPI('main')
 config = ConfigAPI('main')
 tr = LangAPI('main')
 
-updater = Updater(config['token'])
+updater = Updater(config.token)
 dp = updater.dispatcher
 
 start_time = time.time()
 
 
+@utils.log(logger, print_ret=False)
 def start(bot, update):
-    lang = update.effective_user.language_code
+    lang = utils.get_lang(data, update.effective_user)
     update.effective_message.reply_text(tr(lang, 'start'))
 
 
+@utils.log(logger, print_ret=False)
 def help(bot, update, args):
-    lang = update.effective_user.language_code
+    lang = utils.get_lang(data, update.effective_user)
     if len(args) == 0:
         update.effective_message.reply_text(tr(lang, 'help'))
     else:
@@ -40,13 +48,15 @@ def help(bot, update, args):
             update.effective_message.reply_text('Module not found')
 
 
+@utils.log(logger, print_ret=False)
 def about(bot, update):
-    lang = update.effective_user.language_code
-    update.effective_message.reply_text(tr(lang, 'about').format(config['version']))
+    lang = utils.get_lang(data, update.effective_user)
+    update.effective_message.reply_text(tr(lang, 'about').format(config.version))
 
 
+@utils.log(logger, print_ret=False)
 def module_list(bot, update):
-    lang = update.effective_user.language_code
+    lang = utils.get_lang(data, update.effective_user)
     modlist = ''
     for module_name in sorted(modloader.ENABLED):
         modlist += ' - {0}\n'.format(module_name)
@@ -61,20 +71,52 @@ def module_list(bot, update):
                                         parse_mode='HTML')
 
 
+@utils.log(logger, print_ret=False)
+def settings(bot, update):
+    keyboard = []
+    for i, (lang, flag) in enumerate(config.flags.items()):
+        text = '{0} {1}'.format(flag, lang)
+        data = 'settings:lang:{0}'.format(lang)
+        if i % 2 == 0:
+            keyboard.append([InlineKeyboardButton(text, callback_data=data)])
+        else:
+            keyboard[-1].append(InlineKeyboardButton(text, callback_data=data))
+    update.message.reply_text('Choose your language',
+                              reply_markup=InlineKeyboardMarkup(keyboard))
+
+
+@utils.log(logger, print_ret=False)
+def language(bot, update):
+    lang = update.callback_query.data.split(':')[2]
+    if not data.languages:
+        data.languages = {}
+    data.languages.update({update.effective_user.id: lang})
+    data.save()
+    update.callback_query.answer('Now your language is {0}'.format(lang))
+
+
+@utils.log(logger, print_ret=False)
 def main():
-    modloader.load_modules(updater)
+    modloader.load_modules(updater, data)
 
     dp.add_handler(CommandHandler('start', start))
     dp.add_handler(CommandHandler('help', help, pass_args=True))
     dp.add_handler(CommandHandler('about', about))
     dp.add_handler(CommandHandler('modules', module_list))
-    dp.add_error_handler(lambda bot, update, error: print(error))
+    dp.add_handler(CommandHandler('settings', settings))
+    dp.add_handler(CallbackQueryHandler(language, pattern=r'^settings:lang:\w+$'))
+
+    dp.add_error_handler(lambda bot, update, error: logger.exception('Exception was raised',
+                                                                     exc_info=error))
 
     updater.start_polling(clean=True)
 
     logger.info('Bot started in {0:.3} seconds'.format(time.time() - start_time))
 
     updater.idle()
+
+    data.save()
+    data._close()
 
 if __name__ == '__main__':
     main()

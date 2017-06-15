@@ -1,5 +1,6 @@
 from os import listdir
 import api
+import utils
 import logging
 
 ENABLED = {}
@@ -7,16 +8,20 @@ DISABLED = []
 FAILURE = {}
 MODULE_COUNT = 0
 
-logger = logging.getLogger('modloader')
+logger = logging.getLogger(__name__)
 
 
-def load_modules(updater):
+@utils.log(logger, print_ret=False)
+def load_modules(updater, storage):
     global MODULE_COUNT
-    telegram_api = api.TelegramAPI(updater)
+    telegram_api = api.TelegramAPI(updater, storage)
 
     modules = []
     blacklisted_modules = []
-    for filename in listdir('./modules'):
+    files = listdir('./modules')
+    logger.debug('Parsing modules in `./modules`')
+    logger.debug('Found {0} modules'.format(len(files)))
+    for filename in files:
         if filename.startswith('_'):
             logger.info('Skipping module "{0}"'.format(filename))
             continue
@@ -36,6 +41,7 @@ def load_modules(updater):
     for module_name in blacklisted_modules:
         FAILURE.update({module_name: 'conflicting modules with the same name'})
 
+    logger.debug('Initializing modules...')
     for module_name in modules:
         lang = api.LangAPI(module_name)
         try:
@@ -47,7 +53,7 @@ def load_modules(updater):
             DISABLED.append(module_name)
             continue
         except Exception as e:
-            logger.warning('Cannot load module "{0}": {1}'.format(module_name, str(e)))
+            logger.exception('Cannot load module "{0}"'.format(module_name), exc_info=e)
             FAILURE.update({module_name: str(e)})
             continue
 

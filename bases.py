@@ -1,4 +1,8 @@
+import utils
 import json
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class BaseTelegramModule(object):
@@ -17,6 +21,7 @@ class BaseTelegramModule(object):
     """
     disabled = False
 
+    @utils.log(logger, print_ret=False)
     def __init__(self, telegram_api, lang):
         if self.disabled:
             raise InterruptedError('Module is disabled')
@@ -50,12 +55,18 @@ class JSONAPI(object):
         FileNotFoundError: when specified file cannot be found
 
     """
+    @utils.log(logger, print_ret=False)
     def __init__(self, directory, name):
         with open('./{0}/{1}.json'.format(directory, name), 'r') as f:
             self._raw_data = json.load(f)
 
+    @utils.log(logger)
     def __getitem__(self, item):
         return self._raw_data.get(item.lower(), None)
+
+    @utils.log(logger)
+    def __getattr__(self, item):
+        return self.__getitem__(item)
 
     @property
     def raw_data(self):
