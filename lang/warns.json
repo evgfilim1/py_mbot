@@ -1,0 +1,26 @@
+{
+  "en": {
+    "help": "This module can warn a person\nAvailable commands:\n/max_warns <num> - maximum amount warn\n/warn - reply to the person\n/unwarn - reply to the person",
+    "max_warns" : "Changed",
+    "last_warn" : "You cursed!",
+    "help.max_warns" : "Usage `/max_warns <num>`",
+    "reply_to_bot" : "It's me!",
+    "not_admin" : "You not admin"
+  },
+  "ru": {
+    "help": "Модуль умеющий предупреждать\nДоступный команды:\n/max_warns <цифра> - максимальное количество предупреждений\n/warn - ответьте человеку\n/unwarn - ответьте человеку",
+    "max_warns" : "Изменено",
+    "last_warn" : "Ты проклят!",
+    "help.max_warns" : "Используйте `/max_warns <цифра>`",
+    "reply_to_bot" : "Это я!",
+    "not_admin" : "Ты не админ"
+  },
+  "aue": {
+    "help": "Левая рука бога - грозит палочкой\nМалявы:\n/max_warns <циферка> - потолок намёков\n/warn - Пригрозить поцыку\n/unwarn - ответка другому поцыку",
+    "max_warns" : "Сделано, братан!",
+    "last_warn" : "Карма пресекла тебя, лох!",
+    "help.max_warns" : "Малявь `/max_warns <цыцырка>`",
+    "reply_to_bot" : "Не рыпайся!",
+    "not_admin" : "Рыпаешься"
+  }
+}
