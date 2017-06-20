@@ -7,10 +7,6 @@ class TelegramModule(BaseTelegramModule):
         super(TelegramModule, self).__init__(*args)
         self._telegram_api.register_command(['whoami', 'whois', 'who'], self.who)
 
-    def help(self, message, args, lang):
-        self._telegram_api.send_text_message(message.chat_id,
-                                             self._tr(lang, 'help'), reply_to=message.message_id)
-
     def who(self, message, args, lang):
         text = self._tr(lang, 'info_common').format(message.from_user.name, message.from_user.id)
         if message.reply_to_message:

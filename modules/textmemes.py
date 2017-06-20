@@ -24,10 +24,6 @@ class TelegramModule(BaseTelegramModule):
         self._telegram_api.register_command(['shrug'], self.shrug),
         self._telegram_api.register_command(['random_face'], self.random_face)
 
-    def help(self, message, args, lang):
-        self._telegram_api.send_text_message(message.chat_id, self._tr(lang, 'help'),
-                                             reply_to=message.message_id)
-
     def lenny(self, message, args, lang):
         self._telegram_api.send_text_message(message.chat_id, '( ͡° ͜ʖ ͡° )')
 

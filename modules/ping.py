@@ -8,19 +8,6 @@ class TelegramModule(BaseTelegramModule):
         self._telegram_api.register_command(['ping'], self.ping)
         self.friendly_name = 'PingModule'
 
-    def help(self, message, args, lang):
-        """Answers to `/help` message
-
-        Args:
-            message(:class:`telegram.Message`): received message
-            args(list): message arguments
-            lang(str|NoneType): user language
-
-        """
-        self._telegram_api.send_text_message(message.chat_id,
-                                             self._tr(lang, 'help'),
-                                             reply_to=message.message_id)
-
     def ping(self, message, args, lang):
         """Answers to `/ping` message
 

@@ -38,7 +38,9 @@ class BaseTelegramModule(object):
             lang(str|NoneType): user language (``None`` if cannot be determined)
 
         """
-        raise NotImplementedError('This method must be implemented')
+        self._telegram_api.send_text_message(message.chat_id,
+                                             self._tr(lang, 'help'),
+                                             reply_to=message.message_id)
 
 
 class JSONAPI(object):

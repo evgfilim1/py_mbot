@@ -11,11 +11,6 @@ class TelegramModule(BaseTelegramModule):
         self._telegram_api.register_command(['unban'], self.unban)
         self.friendly_name = 'AdminModule'
 
-    def help(self, message, args, lang):
-        self._telegram_api.send_text_message(message.chat_id,
-                                             self._tr(lang, 'help'),
-                                             reply_to=message.message_id)
-
     def is_admin(self, chat_id, user_id):
         return not self._telegram_api.is_private_chat(chat_id) and \
                user_id in self._telegram_api.get_admins(chat_id, use_ids=True)

@@ -30,7 +30,7 @@ def start(bot, update):
 
 
 @utils.log(logger, print_ret=False)
-def help(bot, update, args):
+def help_command(bot, update, args):
     lang = utils.get_lang(data, update.effective_user)
     if len(args) == 0:
         update.effective_message.reply_text(tr(lang, 'help'))
@@ -39,11 +39,7 @@ def help(bot, update, args):
         if module_name in modloader.DISABLED or module_name in modloader.FAILURE:
             update.effective_message.reply_text('Module is disabled')
         elif module_name in modloader.ENABLED:
-            try:
-                modloader.ENABLED.get(module_name).help(update.effective_message, [], lang)
-            except NotImplementedError:
-                update.effective_message.reply_text('Module developer had not implemented `help()`',
-                                                    parse_mode=ParseMode.MARKDOWN)
+            modloader.ENABLED.get(module_name).help(update.effective_message, [], lang)
         else:
             update.effective_message.reply_text('Module not found')
 
@@ -100,7 +96,7 @@ def main():
     modloader.load_modules(updater, data)
 
     dp.add_handler(CommandHandler('start', start))
-    dp.add_handler(CommandHandler('help', help, pass_args=True))
+    dp.add_handler(CommandHandler('help', help_command, pass_args=True))
     dp.add_handler(CommandHandler('about', about))
     dp.add_handler(CommandHandler('modules', module_list))
     dp.add_handler(CommandHandler('settings', settings))
