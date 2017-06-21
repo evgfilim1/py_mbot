@@ -2,13 +2,13 @@
   "en": {
     "help": "This module can warn a person\nAvailable commands:\n/max_warns <num> - maximum amount warn\n/warn - reply to the person\n/unwarn - reply to the person",
     "max_warns" : "Changed",
-    "last_warn" : "You cursed!",
+    "last_warn" : "You have been cursed!",
     "help.max_warns" : "Usage `/max_warns <num>`",
     "reply_to_bot" : "It's me!",
-    "not_admin" : "You not admin"
+    "not_admin" : "You're not admin"
   },
   "ru": {
-    "help": "Модуль умеющий предупреждать\nДоступный команды:\n/max_warns <цифра> - максимальное количество предупреждений\n/warn - ответьте человеку\n/unwarn - ответьте человеку",
+    "help": "Модуль, умеющий предупреждать\nДоступные команды:\n/max_warns <цифра> - максимальное количество предупреждений\n/warn - ответьте человеку\n/unwarn - ответьте человеку",
     "max_warns" : "Изменено",
     "last_warn" : "Ты проклят!",
     "help.max_warns" : "Используйте `/max_warns <цифра>`",
