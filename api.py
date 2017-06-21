@@ -90,7 +90,7 @@ class TelegramAPI(object):
             force_reply_to(Optional[bool]): Replies to message even in private chats
 
         Returns:
-            bool: ``True`` if message was sent, ``False`` otherwise
+            int|bool: message_id if message was sent, ``False`` otherwise
 
         Raises:
             ValueError: if ``markdown`` and ``html`` are both ``True``
@@ -110,12 +110,12 @@ class TelegramAPI(object):
             reply_to = None
 
         try:
-            self._bot.send_message(chat, text, parse_mode=parse_mode, reply_to_message_id=reply_to,
-                                   **kwargs)
+            msg = self._bot.send_message(chat, text, parse_mode=parse_mode,
+                                         reply_to_message_id=reply_to, **kwargs)
         except TelegramError as e:
             logger.exception('Exception was raised while sending message', exc_info=e)
             return False
-        return True
+        return msg.message_id
 
     @utils.log(logger)
     def delete_message(self, chat=None, message_id=None, message=None):
@@ -298,9 +298,8 @@ class LangAPI(JSONAPI):
     @utils.log(logger)
     def __call__(self, lang, string):
         tr = self[lang]
-        if lang is not None:
+        if tr is not None:
             tr = tr.get(string.lower(), None)
-
         if tr is None:
             return self['en'].get(string.lower(), None)
         return tr
