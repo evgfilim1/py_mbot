@@ -1,0 +1,6 @@
+{
+  "en": {
+    "help": "This module helps to control and create pinned messages.\nUsage:\n/pin [no|md|html] <text>",
+    "pin_it": "Now you can pin this message"
+  }
+}
