@@ -1,6 +1,6 @@
 {
   "en": {
-    "help": "This module can warn a person\nAvailable commands:\n/max_warns <num> - maximum amount warn\n/warn - reply to the person\n/unwarn - reply to the person",
+    "help": "This module can warn a person\nAvailable commands:\n/max_warns <num> - maximum amount warn\n/warn - reply to somebody's message with /warn to warn him/her\n/unwarn - reply to somebody's message with /unwarn to delete 1 warn him/her",
     "max_warns" : "Changed",
     "last_warn" : "You have been cursed!",
     "help.max_warns" : "Usage `/max_warns <num>`",
