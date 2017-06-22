@@ -1,6 +1,5 @@
 from bases import BaseTelegramModule
 import api
-from functools import wraps
 
 
 class TelegramModule(BaseTelegramModule):
@@ -56,10 +55,12 @@ class TelegramModule(BaseTelegramModule):
                                                  reply_to=message.message_id)
             return 0
 
-        self._data.warns[message.chat_id][message.from_user.id] = self._data.warns[message.chat_id].get(
-            message.from_user.id, 0) + 1
+        self._data.warns[message.chat_id][message.from_user.id] =\
+            self._data.warns[message.chat_id].get(message.from_user.id, 0) + 1
 
-        text_message = str(self._data.warns[message.chat_id][message.from_user.id]) + "/" + str(self.max_warns)
+        text_message = str(self._data.warns[message.chat_id][message.from_user.id]) +\
+                       "/" + str(self.max_warns)
+
         self._telegram_api.send_text_message(message.chat_id, text_message,
                                              reply_to=message.message_id)
 
@@ -75,10 +76,11 @@ class TelegramModule(BaseTelegramModule):
         if self._data.warns.get(message.chat_id) is None:
             self._data.warns[message.chat_id] = {}
 
-        self._data.warns[message.chat_id][message.from_user.id] = self._data.warns[message.chat_id].get(
-            message.from_user.id, 0) - 1
+        self._data.warns[message.chat_id][message.from_user.id] =\
+            self._data.warns[message.chat_id].get(message.from_user.id, 0) - 1
 
-        text_message = str(self._data.warns[message.chat_id][message.from_user.id]) + "/" + str(self.max_warns)
+        text_message = str(self._data.warns[message.chat_id][message.from_user.id]) +\
+                       "/" + str(self.max_warns)
         self._telegram_api.send_text_message(message.chat_id, text_message,
                                              reply_to=message.message_id)
 
