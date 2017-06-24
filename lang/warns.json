@@ -5,7 +5,8 @@
     "last_warn" : "You have been cursed!",
     "help.max_warns" : "Usage `/max_warns <num>`",
     "reply_to_bot" : "It's me!",
-    "not_admin" : "You're not admin"
+    "not_admin" : "You're not admin",
+    "good" : "No no no! It's cool."
   },
   "ru": {
     "help": "Модуль, умеющий предупреждать\nДоступные команды:\n/max_warns <цифра> - максимальное количество предупреждений\n/warn - ответьте человеку\n/unwarn - ответьте человеку",
@@ -13,7 +14,8 @@
     "last_warn" : "Ты проклят!",
     "help.max_warns" : "Используйте `/max_warns <цифра>`",
     "reply_to_bot" : "Это я!",
-    "not_admin" : "Ты не админ"
+    "not_admin" : "Ты не админ",
+    "good" : "Стоп! Всё отлично!"
   },
   "aue": {
     "help": "Левая рука бога - грозит палочкой\nМалявы:\n/max_warns <циферка> - потолок намёков\n/warn - Пригрозить поцыку\n/unwarn - ответка другому поцыку",
@@ -21,6 +23,7 @@
     "last_warn" : "Карма пресекла тебя, лох!",
     "help.max_warns" : "Малявь `/max_warns <цыцырка>`",
     "reply_to_bot" : "Не рыпайся!",
-    "not_admin" : "Рыпаешься"
+    "not_admin" : "Рыпаешься",
+    "good" : "Брателла, карма запредельна"
   }
 }
