@@ -85,8 +85,9 @@ class TelegramModule(BaseTelegramModule):
         self._data.warns[message.chat_id][message.reply_to_message.from_user.id] =\
             self._data.warns[message.chat_id].get(message.reply_to_message.from_user.id, 0) - 1
 
-        text_message = str(self._data.warns[message.chat_id][message.reply_to_message.from_user.id]) +\
-                       "/" + str(self._data.max_warns)
+        text_message =\
+            str(self._data.warns[message.chat_id][message.reply_to_message.from_user.id]) +\
+            "/" + str(self._data.max_warns)
         self._telegram_api.send_text_message(message.chat_id, text_message,
                                              reply_to=message.message_id)
 
