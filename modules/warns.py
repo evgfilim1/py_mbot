@@ -19,9 +19,6 @@ class TelegramModule(BaseTelegramModule):
         return not self._telegram_api.is_private_chat(chat_id) and \
                user_id in self._telegram_api.get_admins(chat_id, use_ids=True)
 
-    def help(self, message, args, lang):
-        self._telegram_api.send_text_message(message.chat_id, self._tr(lang, 'help'))
-
     def set_max_warns(self, message, args, lang):
         if not self.is_admin(message.chat_id, message.from_user.id):
             return
