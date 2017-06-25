@@ -3,18 +3,7 @@ import api
 
 
 class TelegramModule(BaseTelegramModule):
-
-    def is_admin(self, chat_id, user_id):
-        '''
-
-        :param chat_id:
-        :param user_id:
-        :return bool:
-        '''
-        return not self._telegram_api.is_private_chat(chat_id) and \
-               user_id in self._telegram_api.get_admins(chat_id, use_ids=True)
-
-    def __init__(self,  *args):
+    def __init__(self, *args):
         super(TelegramModule, self).__init__(*args)
         self._telegram_api.register_command(['warn'], self.warn)
         self._telegram_api.register_command(['unwarn'], self.unwarn)
@@ -25,6 +14,10 @@ class TelegramModule(BaseTelegramModule):
 
         if self._data.max_warns is None:
             self._data.max_warns = 3
+
+    def is_admin(self, chat_id, user_id):
+        return not self._telegram_api.is_private_chat(chat_id) and \
+               user_id in self._telegram_api.get_admins(chat_id, use_ids=True)
 
     def help(self, message, args, lang):
         self._telegram_api.send_text_message(message.chat_id, self._tr(lang, 'help'))
@@ -98,7 +91,7 @@ class TelegramModule(BaseTelegramModule):
                                              reply_to=message.message_id)
         self._telegram_api.kick_member(message.chat_id, message.reply_to_message.from_user.id)
         self._telegram_api.send_text_message(message.chat_id,
-                                            self._tr(lang, 'kicked').format(
+                                             self._tr(lang, 'kicked').format(
                                                 message.from_user.name,
                                                 message.reply_to_message.from_user.name
-                                            ), reply_to=message.message_id)
+                                             ), reply_to=message.message_id)
