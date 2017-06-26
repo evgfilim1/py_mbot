@@ -23,6 +23,8 @@ class TelegramModule(BaseTelegramModule):
         if not self.is_admin(message.chat_id, message.from_user.id):
             return
         try:
+            if int(args[0]) <= 0:
+                raise Exception
             self._data.max_warns = int(args[0])
             self._data.save()
             self._telegram_api.send_text_message(message.chat_id, self._tr(lang, 'max_warns'),
@@ -31,9 +33,10 @@ class TelegramModule(BaseTelegramModule):
             self._telegram_api.send_text_message(message.chat_id,
                                                  self._tr(lang, 'help.max_warns'),
                                                  markdown=True)
-
     def warn(self, message, args, lang):
         if not self.is_admin(message.chat_id, message.from_user.id):
+            self._telegram_api.send_text_message(message.chat_id, self._tr(lang, 'not_admin'),
+                                                 reply_to=message.message_id)
             return
 
         if self._data.warns.get(message.chat_id) is None:
