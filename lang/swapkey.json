@@ -1,0 +1,6 @@
+{
+    "en": {
+        "help": "This module swaps keyboard layout between ru and en.\nUsage:\nReply to needed message with /sk command",
+        "notext": "_(Empty message)_"
+    }
+}
